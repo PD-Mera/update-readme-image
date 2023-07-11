@@ -17,8 +17,7 @@ IMAGE_REPL = f"{START_COMMENT}[\\s\\S]+{END_COMMENT}"
 
 REPO = os.getenv("INPUT_README_REPOSITORY")
 IMG_REPO = os.getenv("INPUT_IMG_REPOSITORY")
-# IMG_PATH = os.getenv("INPUT_IMG_PATH")
-IMG_PATH = "assets/random_waifu_img.txt"
+IMG_PATH = os.getenv("INPUT_IMG_PATH")
 GHTOKEN = os.getenv("INPUT_GH_TOKEN")
 COMMIT_MSG = os.getenv("INPUT_COMMIT_MESSAGE")
 WIDTH = os.getenv("INPUT_WIDTH")
@@ -43,7 +42,7 @@ def get_image_tag(repo):
 
     file_content = repo.get_contents(IMG_PATH)
     choose_from = file_content.decoded_content.decode()
-
+    choose_from = choose_from[:-1] if choose_from[-1] == "" else choose_from
     images = random.sample(choose_from.split("\n"), 3)
     is_image = verify_image_ext(images)
     if not is_image:

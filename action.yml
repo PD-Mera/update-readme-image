@@ -25,17 +25,17 @@ inputs:
 
   WIDTH:
     description: "Give width of image"
-    default: "180px"
+    default: "100%"
     required: false
   
   HEIGHT:
     description: "Give height of image"
-    default: "180px"
+    default: "100%"
     required: false
 
   ALIGN:
     description: "Alignment of image"
-    default: "right"
+    default: "center"
     required: false
 
   IMG_ALT:

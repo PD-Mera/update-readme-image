@@ -17,7 +17,8 @@ IMAGE_REPL = f"{START_COMMENT}[\\s\\S]+{END_COMMENT}"
 
 REPO = os.getenv("INPUT_README_REPOSITORY")
 IMG_REPO = os.getenv("INPUT_IMG_REPOSITORY")
-IMG_PATH = os.getenv("INPUT_IMG_PATH")
+# IMG_PATH = os.getenv("INPUT_IMG_PATH")
+IMG_PATH = "assets/random_waifu_img.txt"
 GHTOKEN = os.getenv("INPUT_GH_TOKEN")
 COMMIT_MSG = os.getenv("INPUT_COMMIT_MESSAGE")
 WIDTH = os.getenv("INPUT_WIDTH")
@@ -31,21 +32,37 @@ VALID_IMAGES_EXT = ['png', 'jpg', 'jpeg', 'gif', 'svg']
 def verify_image_ext(image):
     ''' Validate image obtained '''
     global VALID_IMAGES_EXT
-    if image.path.split('/')[-1].split('.')[-1].lower() not in VALID_IMAGES_EXT:
-        print(f"Please make sure image is one of following type {VALID_IMAGES_EXT}, error caused by image - {image.path}")
-        return False
+    # if image.path.split('/')[-1].split('.')[-1].lower() not in VALID_IMAGES_EXT:
+    #     print(f"Please make sure image is one of following type {VALID_IMAGES_EXT}, error caused by image - {image.path}")
+    #     return False
     return True
 
 def get_image_tag(repo):
     ''' Get new image tag <img> to place in README '''
     global IMG_PATH
-    images = repo.get_contents(IMG_PATH)
-    image = random.choice(images)
-    is_image = verify_image_ext(image)
+
+    file_content = repo.get_contents(IMG_PATH)
+    choose_from = file_content.decoded_content.decode()
+
+    images = random.sample(choose_from.split("\n"), 3)
+    is_image = verify_image_ext(images)
     if not is_image:
         sys.exit(1)
-    img_src = image.download_url
-    img_tag = f"<img src={img_src} height={HEIGHT} width={WIDTH} align={ALIGN} alt={IMG_ALT} />"
+    # img_src = image.download_url
+    img_src1 = images[0]
+    img_src2 = images[1]
+    img_src3 = images[2]
+    img_tag = f"""<picture>
+                    <img src='{img_src1}' height={HEIGHT} width={WIDTH} align={ALIGN} alt={IMG_ALT} />
+                  </picture>
+                  <br>
+                  <picture>
+                    <img src='{img_src2}' height={HEIGHT} width={WIDTH} align={ALIGN} alt={IMG_ALT} />
+                  </picture>
+                  <br>
+                  <picture>
+                    <img src='{img_src3}' height={HEIGHT} width={WIDTH} align={ALIGN} alt={IMG_ALT} />
+                  </picture>"""
     return img_tag
 
 def decode_readme(data: str) -> str:

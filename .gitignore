@@ -1,3 +1,5 @@
+test_read_repo.py
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
